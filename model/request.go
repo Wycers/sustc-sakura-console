@@ -7,6 +7,7 @@ type LoginRequest struct {
 }
 
 type TransRequest struct {
-	Action string `json:"action"`
+	Action     string `json:"action"`
 	JSESSIONID string `json:"JSESSIONID"`
+	Week       string `json:"week"`
 }

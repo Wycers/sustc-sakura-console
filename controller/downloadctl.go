@@ -19,7 +19,15 @@ func DownloadAction(c *gin.Context)  {
 		return
 	}
 
-	trans := NewTransRequest(session.JSESSIONID)
+	week := c.Param("week")
+	if week == "" {
+		res.Code = -2
+		res.Msg = "week error"
+		c.JSON(http.StatusForbidden, res)
+		return
+	}
+
+	trans := NewTransRequest(session.JSESSIONID, week)
 	JsonString, err := json.Marshal(trans)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, res)
@@ -51,9 +59,10 @@ func DownloadAction(c *gin.Context)  {
 }
 
 
-func NewTransRequest(jsessionid string) *model.TransRequest {
+func NewTransRequest(jsessionid string, week string) *model.TransRequest {
 	return &model.TransRequest{
 		Action: "trans",
 		JSESSIONID: jsessionid,
+		Week: week,
 	}
 }
