@@ -14,7 +14,7 @@ func LoginAction(c *gin.Context) {
 	login := &model.LoginRequest{}
 	if err := c.BindJSON(login); err != nil {
 		res.Code = -1
-		res.Msg = "parses add article request failed"
+		res.Msg = "parses login request failed"
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
