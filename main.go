@@ -48,11 +48,7 @@ func main() {
 
 	logger.Infof("Sakura (v%s) is running [%s]", util.Version, util.Config.Server)
 
-	if util.Config.RuntimeMode == "dev" {
-		server.ListenAndServe()
-	} else {
-		server.ListenAndServeTLS("214502860120160.crt", "214502860120160.key")
-	}
+	server.ListenAndServe()
 }
 
 func handleSignal(server *http.Server) {
