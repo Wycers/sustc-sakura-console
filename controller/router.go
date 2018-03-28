@@ -72,7 +72,7 @@ func Routes() *gin.Engine {
 	res.StaticFile("/", staticPath("static/dist/index.html"))
 	api := res.Group(util.PathAPI)
 	api.POST("/login", LoginAction)
-	res.GET("/download", DownloadAction)
+	api.POST("/download", DownloadAction)
 
 	//static files
 

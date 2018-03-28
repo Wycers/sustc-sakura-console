@@ -6,6 +6,7 @@ import (
 	"github.com/wycers/sustc-sakura-console/util"
 	"encoding/json"
 	"net/http"
+	"fmt"
 )
 
 func DownloadAction(c *gin.Context)  {
@@ -19,8 +20,15 @@ func DownloadAction(c *gin.Context)  {
 		return
 	}
 
-	week := c.Param("week")
-	if week == "" {
+	request := &model.DownloadRequest{}
+	if err := c.BindJSON(request); err != nil {
+		res.Code = -5
+		res.Msg = "parse failed"
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	week := request.Week
+	if week == 0 {
 		res.Code = -2
 		res.Msg = "week error"
 		c.JSON(http.StatusForbidden, res)
@@ -46,12 +54,18 @@ func DownloadAction(c *gin.Context)  {
 		return
 	}
 	if response.Code == -1 {
-		res.Data = response.Msg
+		res.Msg = response.Msg
 		c.JSON(http.StatusForbidden, res)
 		return
 	}
+	if response.Code == -3 {
+		res.Msg = response.Msg
+		c.JSON(http.StatusUnauthorized, res)
+		return
+	}
 	if response.Code == 0 {
-		c.Header("content-disposition", "attachment; filename=" + session.StudentID + ".ics")
+		c.Header("content-disposition", "attachment; filename=" + fmt.Sprintf("%s-%d.ics",session.StudentID, week))
+		c.Header("x-suggested-filename", fmt.Sprintf("%s-%d.ics",session.StudentID, week))
 		c.File(response.Msg)
 		res.Data = "success"
 		c.JSON(http.StatusOK, res)
@@ -59,7 +73,7 @@ func DownloadAction(c *gin.Context)  {
 }
 
 
-func NewTransRequest(jsessionid string, week string) *model.TransRequest {
+func NewTransRequest(jsessionid string, week int) *model.TransRequest {
 	return &model.TransRequest{
 		Action: "trans",
 		JSESSIONID: jsessionid,
