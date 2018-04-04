@@ -42,7 +42,7 @@ var Models = []interface{}{
 	&model.Report{}, &model.Log{},
 }
 
-const Version = "0.1.0"
+const Version = "1.0.0"
 const tablePrefix = "Sakura_"
 
 func LoadConfig() {

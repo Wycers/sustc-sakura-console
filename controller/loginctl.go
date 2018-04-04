@@ -6,6 +6,7 @@ import (
 	"github.com/wycers/sustc-sakura-console/model"
 	"net/http"
 	"encoding/json"
+	"github.com/wycers/sustc-sakura-console/service"
 )
 
 func LoginAction(c *gin.Context) {
@@ -48,6 +49,10 @@ func LoginAction(c *gin.Context) {
 		session.JSESSIONID = response.Msg
 		session.Save(c)
 		res.Data = "success"
+		log := &model.Log{
+			StudentID: login.Username,
+		}
+		service.Log.CreateLog(log)
 		c.JSON(http.StatusOK, res)
 	}
 }
